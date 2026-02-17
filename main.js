@@ -384,23 +384,38 @@ function initSubmitForm() {
 
     setLoading(true);
 
-    try {
-      const { eggs, sha } = await fetchEggsFromGitHub();
-      eggs.push(newEgg);
-      await saveEggsToGitHub(
-        eggs,
-        sha,
-        `Add egg from ${submitter} (${capitalize(pokemonData.name)})`
-      );
+    // Retry up to 3 times on SHA conflict (another submission landed between
+    // our fetch and our PUT — just re-fetch and try again).
+    const MAX_RETRIES = 3;
+    let lastErr;
+    for (let attempt = 1; attempt <= MAX_RETRIES; attempt++) {
+      try {
+        if (attempt > 1) {
+          setLoading(true, `Retrying… (${attempt}/${MAX_RETRIES})`);
+          await new Promise(r => setTimeout(r, 500 * attempt)); // brief back-off
+        }
+        const { eggs, sha } = await fetchEggsFromGitHub();
+        eggs.push(newEgg);
+        await saveEggsToGitHub(
+          eggs,
+          sha,
+          `Add egg from ${submitter} (${capitalize(pokemonData.name)})`
+        );
 
-      form.classList.add('hidden');
-      successState.classList.remove('hidden');
-      successDetail.textContent = `${capitalize(pokemonData.name)}${newEgg.nickname ? ` (nicknamed "${newEgg.nickname}")` : ''} from ${submitter} has been added to the egg pool.`;
-    } catch (err) {
-      showError(`Submission failed: ${err.message}`);
-    } finally {
-      setLoading(false);
+        form.classList.add('hidden');
+        successState.classList.remove('hidden');
+        successDetail.textContent = `${capitalize(pokemonData.name)}${newEgg.nickname ? ` (nicknamed "${newEgg.nickname}")` : ''} from ${submitter} has been added to the egg pool.`;
+        setLoading(false);
+        return; // success — exit the submit handler
+      } catch (err) {
+        lastErr = err;
+        // Only retry on SHA conflict (422); surface other errors immediately
+        if (!err.message.includes('does not match') && !err.message.includes('409')) break;
+      }
     }
+
+    showError(`Submission failed: ${lastErr.message}`);
+    setLoading(false);
   });
 
   function showError(msg) {
@@ -409,8 +424,8 @@ function initSubmitForm() {
     formError.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  function setLoading(on) {
+  function setLoading(on, label) {
     submitBtn.disabled = on;
-    submitLabel.textContent = on ? 'Submitting…' : 'Submit Egg 🥚';
+    submitLabel.textContent = on ? (label || 'Submitting…') : 'Submit Egg 🥚';
   }
 }

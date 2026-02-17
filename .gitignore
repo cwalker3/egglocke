@@ -1,3 +1,6 @@
-# eggs.json is managed entirely via the GitHub API at runtime.
-# Create it manually in the GitHub repo with content: []
+# Managed via GitHub API at runtime — create manually in the GitHub repo with content: []
 eggs.json
+
+# Contains your GitHub token — never commit this.
+# Create it manually in the GitHub repo via the web UI.
+config.js
