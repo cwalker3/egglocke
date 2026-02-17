@@ -1,0 +1,3 @@
+# eggs.json is managed entirely via the GitHub API at runtime.
+# Create it manually in the GitHub repo with content: []
+eggs.json
