@@ -7,8 +7,8 @@
 // 2. Put this site in a GitHub repo with GitHub Pages enabled.
 // ============================================================
 const CONFIG = {
-  token: "YOUR_GITHUB_TOKEN",   // e.g. "ghp_abc123..."
-  owner: "YOUR_GITHUB_USERNAME", // e.g. "ash-ketchum"
-  repo:  "YOUR_REPO_NAME",       // e.g. "egglocke"
+  token: "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",   // e.g. "ghp_abc123..."
+  owner: "cwalker3", // e.g. "ash-ketchum"
+  repo:  "egglocke",       // e.g. "egglocke"
   branch: "main",                // "main" or "master"
 };
