@@ -37,6 +37,7 @@ const API_BASE  = `https://api.github.com/repos/${CONFIG.owner}/${CONFIG.repo}/c
 async function fetchEggsFromGitHub() {
   const res = await fetch(`${API_BASE}/${EGGS_PATH}`, {
     headers: githubHeaders(),
+    cache: 'no-store', // always fetch fresh — never use a cached SHA
   });
   if (!res.ok) throw new Error(`GitHub API error: ${res.status}`);
   const data = await res.json();
@@ -57,8 +58,10 @@ async function saveEggsToGitHub(eggs, sha, commitMessage) {
     body,
   });
   if (!res.ok) {
-    const err = await res.json().catch(() => ({}));
-    throw new Error(err.message || `GitHub API error: ${res.status}`);
+    const errBody = await res.json().catch(() => ({}));
+    const err = new Error(errBody.message || `GitHub API error: ${res.status}`);
+    err.status = res.status; // attach status so retry logic can check it reliably
+    throw err;
   }
   return res.json();
 }
@@ -409,8 +412,9 @@ function initSubmitForm() {
         return; // success — exit the submit handler
       } catch (err) {
         lastErr = err;
-        // Only retry on SHA conflict (422); surface other errors immediately
-        if (!err.message.includes('does not match') && !err.message.includes('409')) break;
+        // Only retry on SHA/ref conflicts (409 or 422); surface all other errors immediately
+        const isConflict = err.status === 409 || err.status === 422;
+        if (!isConflict) break;
       }
     }
 
