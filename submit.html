@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Submit an Egg — Egglocke</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="container">
+      <div class="header-content">
+        <div class="header-text">
+          <h1 class="site-title"><a href="index.html" style="color:inherit;text-decoration:none;">🥚 Egglocke</a></h1>
+          <p class="site-subtitle">Submit your egg</p>
+        </div>
+        <a href="index.html" class="btn-secondary">← View All Eggs</a>
+      </div>
+    </div>
+  </header>
+
+  <main class="container">
+    <div class="form-wrapper">
+      <form id="egg-form" novalidate>
+
+        <!-- Pokemon search + preview -->
+        <div class="form-section">
+          <div class="pokemon-search-row">
+            <div class="field" style="flex:1;">
+              <label for="pokemon-input">Pokemon <span class="required">*</span></label>
+              <div class="ss-wrapper">
+                <input
+                  type="text"
+                  id="pokemon-input"
+                  name="pokemon"
+                  placeholder="Search Pokemon…"
+                  autocomplete="off"
+                  required
+                />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+              <span id="pokemon-feedback" class="field-feedback"></span>
+            </div>
+            <div id="pokemon-preview" class="pokemon-preview hidden">
+              <img id="pokemon-sprite" src="" alt="" />
+              <span id="pokemon-name-label"></span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Trainer info -->
+        <div class="form-section">
+          <div class="field-row">
+            <div class="field">
+              <label for="submitter">Your Name <span class="required">*</span></label>
+              <input type="text" id="submitter" name="submitter" placeholder="Trainer name" required />
+            </div>
+            <div class="field">
+              <label for="nickname">Nickname</label>
+              <input type="text" id="nickname" name="nickname" placeholder="Optional nickname" />
+            </div>
+          </div>
+        </div>
+
+        <!-- Battle details -->
+        <div class="form-section">
+          <h3 class="section-heading">Battle Details</h3>
+          <div class="field-row">
+            <div class="field">
+              <label for="ability">Ability</label>
+              <div class="ss-wrapper">
+                <input type="text" id="ability" name="ability" placeholder="Search abilities…" autocomplete="off" />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+            </div>
+            <div class="field">
+              <label for="item">Held Item</label>
+              <div class="ss-wrapper">
+                <input type="text" id="item" name="item" placeholder="Search items…" autocomplete="off" />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+            </div>
+          </div>
+          <div class="field">
+            <label>Moves</label>
+            <div class="moves-grid">
+              <div class="ss-wrapper">
+                <input type="text" name="move1" placeholder="Move 1" autocomplete="off" />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+              <div class="ss-wrapper">
+                <input type="text" name="move2" placeholder="Move 2" autocomplete="off" />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+              <div class="ss-wrapper">
+                <input type="text" name="move3" placeholder="Move 3" autocomplete="off" />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+              <div class="ss-wrapper">
+                <input type="text" name="move4" placeholder="Move 4" autocomplete="off" />
+                <div class="ss-dropdown"><div class="ss-list"></div></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Message -->
+        <div class="form-section">
+          <div class="field">
+            <label for="message">Message to the Player</label>
+            <textarea id="message" name="message" rows="3" placeholder="Good luck! I hope this Pokemon serves you well…"></textarea>
+          </div>
+        </div>
+
+        <div id="form-error" class="form-error hidden"></div>
+
+        <button type="submit" id="submit-btn" class="btn-primary btn-large">
+          <span id="submit-label">Submit Egg 🥚</span>
+        </button>
+      </form>
+
+      <div id="success-state" class="success-state hidden">
+        <div class="success-content">
+          <p class="success-emoji">🎉</p>
+          <h2>Egg submitted!</h2>
+          <p id="success-detail"></p>
+          <div class="success-buttons">
+            <a href="submit.html" class="btn-primary">Submit Another</a>
+            <a href="index.html" class="btn-secondary">View All Eggs</a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container">
+      <p>Powered by PokeAPI &amp; GitHub Pages</p>
+    </div>
+  </footer>
+
+  <script src="config.js"></script>
+  <script src="main.js"></script>
+  <script>
+    initSubmitForm();
+  </script>
+</body>
+</html>
